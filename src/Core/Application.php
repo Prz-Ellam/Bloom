@@ -2,15 +2,27 @@
 
 namespace Bloom\core;
 
+use Bloom\Http\Request\PhpNativeRequestBuilder;
+use Bloom\Http\Request\Request;
+use Bloom\Http\Request\RequestDirector;
+use Bloom\Http\Response\Response;
 use Bloom\Router\Router;
 use Closure;
 
 class Application {
+    private Request $request;
+    private Response $response;
     private Router $router;
     private static ?self $instance = null;
 
     private function __construct() {
         $this->router = new Router();
+
+        $requestDirector = new RequestDirector();
+        $requestDirector->setRequestBuilder(new PhpNativeRequestBuilder());
+        $requestDirector->buildRequest();
+        $this->request = $requestDirector->getRequest();
+        $this->response = new Response();
     }
 
     public static function app() {
@@ -21,12 +33,10 @@ class Application {
     }
 
     public function run() {
-        $uri = $_SERVER["REQUEST_URI"];
-        $method = $_SERVER["REQUEST_METHOD"];
+        $route = $this->router->resolve($this->request);
 
-        $route = $this->router->resolve($method, $uri);
         $action = $route->getAction();
-        $action();
+        $action($this->request, $this->response);
     }
 
     public function get(string $uri, Closure $action): void {
@@ -48,5 +58,4 @@ class Application {
     public function delete(string $uri, Closure $action): void {
         $this->router->delete($uri, $action);
     }
-
 }

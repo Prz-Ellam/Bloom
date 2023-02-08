@@ -3,6 +3,7 @@
 namespace Bloom\Router;
 
 use Bloom\Http\HttpMethod;
+use Bloom\Http\Request\Request;
 use Closure;
 
 class Router {
@@ -38,8 +39,10 @@ class Router {
         $this->registerRoute(HttpMethod::DELETE, $uri, $action);
     }
 
-    public function resolve(string $method, string $uri): ?Route {
-        foreach ($this->routes[$method] as $route) {
+    public function resolve(Request $request): ?Route {
+        $method = $request->getMethod();
+        $uri = $request->getUri();
+        foreach ($this->routes[$method->value] as $route) {
             if ($route->match($uri)) {
                 return $route;
             }
