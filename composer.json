@@ -1,0 +1,18 @@
+{
+    "name": "prz-ellam/bloom",
+    "description": "PHP minimalist web application framework",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Bloom\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Prz-Ellam",
+            "email": "PerezAlex088@outlook.com"
+        }
+    ],
+    "require": {}
+}
