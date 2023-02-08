@@ -1,5 +1,15 @@
 <?php
 
+use Bloom\core\Application;
+
 require_once "./vendor/autoload.php";
 
-echo "Hello World";
+$app = Application::app();
+$app->get('/', function() {
+    print("Hello Bloom");
+});
+$app->get('/home', function() {
+    print("Home");
+});
+
+$app->run();
