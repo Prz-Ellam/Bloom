@@ -3,6 +3,7 @@
 namespace Bloom\Tests;
 
 use Bloom\Http\HttpMethod;
+use Bloom\Http\Request\Request;
 use Bloom\Router\Router;
 use PHPUnit\Framework\TestCase;
 
@@ -14,9 +15,10 @@ class RouterTest extends TestCase {
         $action = fn() => "test";
 
         $router = new Router();
+        $request = new Request();
         $router->get($uri, $action);
 
-        $route = $router->resolve($method, $uri);
+        $route = $router->resolve($request);
         $this->assertEquals($action, $route->getAction());
     }
 

@@ -15,27 +15,27 @@ class Router {
         }
     }
 
-    public function registerRoute(HttpMethod $method, string $uri, Closure $action): void {
+    public function registerRoute(HttpMethod $method, string $uri, Closure|array $action): void {
         $this->routes[$method->value][$uri] = new Route($uri, $action); 
     }
 
-    public function get(string $uri, Closure $action): void {
+    public function get(string $uri, Closure|array $action): void {
         $this->registerRoute(HttpMethod::GET, $uri, $action);
     }
 
-    public function post(string $uri, Closure $action): void {
+    public function post(string $uri, Closure|array $action): void {
         $this->registerRoute(HttpMethod::POST, $uri, $action);
     }
 
-    public function put(string $uri, Closure $action): void {
+    public function put(string $uri, Closure|array $action): void {
         $this->registerRoute(HttpMethod::PUT, $uri, $action);
     }
 
-    public function patch(string $uri, Closure $action): void {
+    public function patch(string $uri, Closure|array $action): void {
         $this->registerRoute(HttpMethod::PATCH, $uri, $action);
     }
 
-    public function delete(string $uri, Closure $action): void {
+    public function delete(string $uri, Closure|array $action): void {
         $this->registerRoute(HttpMethod::DELETE, $uri, $action);
     }
 

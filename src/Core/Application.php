@@ -34,28 +34,38 @@ class Application {
 
     public function run() {
         $route = $this->router->resolve($this->request);
-
         $action = $route->getAction();
-        $action($this->request, $this->response);
+
+        if ($action instanceof Closure) {
+            $action($this->request, $this->response);
+        }
+        else if (is_array($action)) {
+            $action[0] = new $action[0];
+            call_user_func($action, $this->request, $this->response);
+        }
+
+        
+
+        //call_user_func($action, $this->request, $this->response);
     }
 
-    public function get(string $uri, Closure $action): void {
+    public function get(string $uri, Closure|array $action): void {
         $this->router->get($uri, $action);
     }
 
-    public function post(string $uri, Closure $action): void {
+    public function post(string $uri, Closure|array $action): void {
         $this->router->post($uri, $action);
     }
 
-    public function put(string $uri, Closure $action): void {
+    public function put(string $uri, Closure|array $action): void {
         $this->router->put($uri, $action);
     }
 
-    public function patch(string $uri, Closure $action): void {
+    public function patch(string $uri, Closure|array $action): void {
         $this->router->patch($uri, $action);
     }
 
-    public function delete(string $uri, Closure $action): void {
+    public function delete(string $uri, Closure|array $action): void {
         $this->router->delete($uri, $action);
     }
 }

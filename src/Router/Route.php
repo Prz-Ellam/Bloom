@@ -9,6 +9,7 @@ class Route {
     private Closure|array $action;
     private string $regexUri;
     private array $parameters;
+    private array $middlewares;
     private const URI_VARIABLES_REGEX = "/:([^\/]+)/";
 
     public function __construct(string $routeUri, Closure|array $action) {
