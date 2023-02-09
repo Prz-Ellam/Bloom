@@ -13,11 +13,11 @@ abstract class RequestBuilder {
         return $this->request;
     }
 
-    public abstract function buildUri();
-    public abstract function buildMethod();
-    public abstract function buildHeaders();
-    public abstract function buildQuery();
-    public abstract function buildBody();
-    public abstract function buildParams();
-    public abstract function buildFiles();
+    public abstract function buildUri(): self;
+    public abstract function buildMethod(): self;
+    public abstract function buildHeaders(): self;
+    public abstract function buildQuery(): self;
+    public abstract function buildBody(): self;
+    public abstract function buildParams(): self;
+    public abstract function buildFiles(): self;
 }

@@ -3,7 +3,7 @@
 namespace Bloom\Http\Request;
 
 class RequestDirector {
-    private RequestBuilder $requestBuilder;
+    private ?RequestBuilder $requestBuilder = null;
 
     public function setRequestBuilder(RequestBuilder $requestBuilder): void {
         $this->requestBuilder = $requestBuilder;
@@ -14,13 +14,18 @@ class RequestDirector {
     }
 
     public function buildRequest(): void {
-        $this->requestBuilder->buildUri();
-        $this->requestBuilder->buildMethod();
-        $this->requestBuilder->buildHeaders();
-        $this->requestBuilder->buildQuery();
-        $this->requestBuilder->buildBody();
-        $this->requestBuilder->buildParams();
-        $this->requestBuilder->buildFiles();
+        if (!$this->requestBuilder) {
+            return;
+        }
+        
+        $this->requestBuilder
+            ->buildUri()
+            ->buildMethod()
+            ->buildHeaders()
+            ->buildQuery()
+            ->buildBody()
+            ->buildParams()
+            ->buildFiles();
     }
 
 }

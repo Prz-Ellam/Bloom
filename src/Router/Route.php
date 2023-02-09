@@ -22,7 +22,7 @@ class Route {
 
         $regexUri = $this->routeUri;
         foreach ($this->parameters as $parameter) {
-            $regexUri = preg_replace("/:$parameter/", "(?<$parameter>[A-Za-z0-9-._~:?#\[\]@!$&'()*+,;=]+)", $regexUri);
+            $regexUri = preg_replace("/:$parameter/", "(?<$parameter>[A-Za-z0-9-._~:?#\]\[@!$&'()*\+,;=]+)", $regexUri);
         }
         $this->regexUri = $regexUri;
     }
@@ -37,8 +37,7 @@ class Route {
 
     public function getParameters(string $uri): array {
         $parameters = [];
-        preg_match("#$this->regexUri#", $uri, $parameters);
-
+        preg_match("|$this->regexUri|", $uri, $parameters);
         foreach ($parameters as $key => $value) {
             if (!in_array($key, $this->parameters)) {
                 unset($parameters[$key]);
@@ -47,7 +46,13 @@ class Route {
         return $parameters;
     }
 
+    /**
+     * Check if the uri matches the Route
+     *
+     * @param string $uri
+     * @return boolean
+     */
     public function match(string $uri): bool {
-        return preg_match("#^$this->regexUri$#", $uri);
+        return preg_match("|^$this->regexUri$|", $uri);
     }
 }

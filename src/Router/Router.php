@@ -7,6 +7,11 @@ use Bloom\Http\Request\Request;
 use Closure;
 
 class Router {
+    /**
+     * Collection of the register routes for group by HTTP Method
+     *
+     * @var array<HttpMethod, Route>
+     */
     private array $routes = [];
 
     public function __construct() {
@@ -15,6 +20,14 @@ class Router {
         }
     }
 
+    /**
+     * Include a new route in the collection of routes
+     *
+     * @param HttpMethod $method
+     * @param string $uri
+     * @param Closure|array $action
+     * @return void
+     */
     public function registerRoute(HttpMethod $method, string $uri, Closure|array $action): void {
         $this->routes[$method->value][$uri] = new Route($uri, $action); 
     }
@@ -39,6 +52,12 @@ class Router {
         $this->registerRoute(HttpMethod::DELETE, $uri, $action);
     }
 
+    /**
+     * Find the action of a HTTP Request
+     *
+     * @param Request $request
+     * @return ?Route
+     */
     public function resolve(Request $request): ?Route {
         $method = $request->getMethod();
         $uri = $request->getUri();

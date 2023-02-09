@@ -12,8 +12,17 @@ class Response {
         return $this;
     }
 
+    public function getStatus(): int {
+        return $this->code;
+    }
+
     public function setContentType(string $value): self {
         $this->headers["Content-Type"] = $value;
+        return $this;
+    }
+
+    public function setHeader(string $header, string $value): self {
+        $this->headers[$header] = $value;
         return $this;
     }
 
@@ -29,11 +38,11 @@ class Response {
         return $this;
     }
 
-    public function view() {
+    public function view(string $view) {
         
     }
 
-    public function redirect() {
+    public function redirect(string $uri) {
 
     }
 }

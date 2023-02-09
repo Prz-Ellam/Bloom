@@ -9,10 +9,36 @@ use Bloom\Http\Response\Response;
 use Bloom\Router\Router;
 use Closure;
 
+/**
+ * Kernel of the application
+ */
 class Application {
+    /**
+     * HTTP Request structure
+     *
+     * @var Request
+     */
     private Request $request;
+
+    /**
+     * HTTP Response structure
+     *
+     * @var Response
+     */
     private Response $response;
+
+    /**
+     * Router of the application
+     *
+     * @var Router
+     */
     private Router $router;
+
+    /**
+     * Unique instance of the Application
+     *
+     * @var self|null
+     */
     private static ?self $instance = null;
 
     private function __construct() {
@@ -25,15 +51,27 @@ class Application {
         $this->response = new Response();
     }
 
-    public static function app() {
+    public static function app(): self {
         if (!self::$instance) {
             self::$instance = new self();
         }
         return self::$instance;
     }
 
-    public function run() {
+    /**
+     * Execute the application
+     *
+     * @return void
+     */
+    public function run(): void {
         $route = $this->router->resolve($this->request);
+
+        if (!$route) {
+            print("404 Not Found");
+            http_response_code(404);
+            exit();
+        }
+
         $action = $route->getAction();
 
         if ($action instanceof Closure) {
@@ -43,12 +81,15 @@ class Application {
             $action[0] = new $action[0];
             call_user_func($action, $this->request, $this->response);
         }
-
-        
-
-        //call_user_func($action, $this->request, $this->response);
     }
 
+    /**
+     * Register uri in the main Router for the HTTP Method GET
+     *
+     * @param string $uri
+     * @param Closure|array $action
+     * @return void
+     */
     public function get(string $uri, Closure|array $action): void {
         $this->router->get($uri, $action);
     }

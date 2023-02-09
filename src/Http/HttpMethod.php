@@ -2,7 +2,10 @@
 
 namespace Bloom\Http;
 
-enum HttpMethod : string {
+/**
+ * List of the supported HTTP Methods
+ */
+enum HttpMethod: string {
     case GET = 'GET';
     case POST = 'POST';
     case PUT = 'PUT';
