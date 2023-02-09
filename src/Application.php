@@ -1,12 +1,13 @@
 <?php
 
-namespace Bloom\core;
+namespace Bloom;
 
 use Bloom\Http\Request\PhpNativeRequestBuilder;
 use Bloom\Http\Request\Request;
 use Bloom\Http\Request\RequestDirector;
 use Bloom\Http\Response\Response;
 use Bloom\Router\Router;
+use Bloom\Templates\TemplateEngine;
 use Closure;
 
 /**
@@ -35,6 +36,13 @@ class Application {
     private Router $router;
 
     /**
+     * HTML Template for rendering views
+     *
+     * @var TemplateEngine
+     */
+    private TemplateEngine $templateEngine;
+
+    /**
      * Unique instance of the Application
      *
      * @var self|null
@@ -49,6 +57,9 @@ class Application {
         $requestDirector->buildRequest();
         $this->request = $requestDirector->getRequest();
         $this->response = new Response();
+
+        $this->templateEngine = new TemplateEngine();
+        $this->templateEngine->setBasePath(dirname(__DIR__, 1) . "/views");
     }
 
     public static function app(): self {
@@ -56,6 +67,10 @@ class Application {
             self::$instance = new self();
         }
         return self::$instance;
+    }
+
+    public function getTemplateEngine(): TemplateEngine {
+        return $this->templateEngine;
     }
 
     /**
@@ -86,6 +101,8 @@ class Application {
             $action[0] = new $action[0];
             call_user_func($action, $this->request, $this->response);
         }
+
+        print($this->response->getBody());
     }
 
     /**

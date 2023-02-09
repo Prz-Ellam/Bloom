@@ -90,4 +90,8 @@ class Request {
         $this->files = $files;
         return $this;
     }
+
+    public function __get(string $name): string {
+        return $this->body[$name] ?? null;
+    }
 }

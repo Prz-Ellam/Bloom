@@ -2,6 +2,8 @@
 
 namespace Bloom\Http\Response;
 
+use Bloom\Application;
+
 class Response {
     private int $code = 200;
     private array $headers = [];
@@ -26,11 +28,21 @@ class Response {
         return $this;
     }
 
+    public function getBody(): ?string {
+        return $this->body;
+    }
+
     public function setBody(?string $body): self {
         $this->body = $body;
         return $this;
     }
 
+    /**
+     * Returns a HTTP Response as JSON
+     *
+     * @param mixed $data
+     * @return self
+     */
     public function json(mixed $data): self {
         $this
             ->setContentType("application/json")
@@ -39,7 +51,12 @@ class Response {
     }
 
     public function view(string $view) {
-        
+
+        $templateEngine = Application::app()->getTemplateEngine();
+        $html = $templateEngine->render($view);
+        $this
+            ->setContentType("text/html")
+            ->setBody($html);
     }
 
     public function redirect(string $uri) {
