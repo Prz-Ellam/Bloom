@@ -72,7 +72,12 @@ class Application {
             exit();
         }
 
+        $middlewares = $route->getMiddlewares();
         $action = $route->getAction();
+
+        foreach ($middlewares as $middleware) {
+            $middleware($this->request, $this->response, );
+        }
 
         if ($action instanceof Closure) {
             $action($this->request, $this->response);
@@ -90,23 +95,23 @@ class Application {
      * @param Closure|array $action
      * @return void
      */
-    public function get(string $uri, Closure|array $action): void {
-        $this->router->get($uri, $action);
+    public function get(string $uri, Closure|array $action, array $middlewares = []): void {
+        $this->router->get($uri, $action, $middlewares);
     }
 
-    public function post(string $uri, Closure|array $action): void {
-        $this->router->post($uri, $action);
+    public function post(string $uri, Closure|array $action, array $middlewares = []): void {
+        $this->router->post($uri, $action, $middlewares);
     }
 
-    public function put(string $uri, Closure|array $action): void {
-        $this->router->put($uri, $action);
+    public function put(string $uri, Closure|array $action, array $middlewares = []): void {
+        $this->router->put($uri, $action, $middlewares);
     }
 
-    public function patch(string $uri, Closure|array $action): void {
-        $this->router->patch($uri, $action);
+    public function patch(string $uri, Closure|array $action, array $middlewares = []): void {
+        $this->router->patch($uri, $action, $middlewares);
     }
 
-    public function delete(string $uri, Closure|array $action): void {
-        $this->router->delete($uri, $action);
+    public function delete(string $uri, Closure|array $action, array $middlewares = []): void {
+        $this->router->delete($uri, $action, $middlewares);
     }
 }

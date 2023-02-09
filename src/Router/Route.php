@@ -12,9 +12,10 @@ class Route {
     private array $middlewares;
     private const URI_VARIABLES_REGEX = "/:([^\/]+)/";
 
-    public function __construct(string $routeUri, Closure|array $action) {
+    public function __construct(string $routeUri, Closure|array $action, array $middlewares = []) {
         $this->routeUri = $routeUri;
         $this->action = $action;
+        $this->middlewares = $middlewares;
 
         $matches = [];
         preg_match_all(self::URI_VARIABLES_REGEX, $this->routeUri, $matches);
@@ -44,6 +45,15 @@ class Route {
             }
         }
         return $parameters;
+    }
+
+    /**
+     * Return the middlewares of the route
+     *
+     * @return array
+     */
+    public function getMiddlewares(): array {
+        return $this->middlewares;
     }
 
     /**
