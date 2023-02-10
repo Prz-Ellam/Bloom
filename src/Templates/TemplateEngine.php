@@ -12,6 +12,7 @@ class TemplateEngine {
      * @var string
      */
     private string $basePath = "";
+    private string $extension = "php";
 
     public function __construct(string $basePath) {
         $this->basePath = $basePath;
@@ -43,9 +44,8 @@ class TemplateEngine {
      * @param string $template
      * @return string
      */
-    public function render(string $template, array $parameters = []): string {
-        ob_start();
-        include_once "$this->basePath/$template.php";
-        return ob_get_clean();
+    public function render(string $templateName, array $parameters = []): string {
+        $template = new Template($this->basePath, $parameters);
+        return $template->render($templateName);
     }
 }

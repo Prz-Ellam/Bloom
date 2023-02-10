@@ -8,7 +8,7 @@ class Template {
      *
      * @var string
      */
-    private string $templatePath = '';
+    private string $basePath = '';
 
     private ?string $layoutName = null;
     private array $layoutData = [];
@@ -18,10 +18,11 @@ class Template {
      *
      * @var array
      */
-    private array $data = [];
+    private array $parameters = [];
 
-    public function __construct($data = []) {
-        $this->data = $data;
+    public function __construct(string $basePath, array $parameters = []) {
+        $this->basePath = $basePath;
+        $this->parameters = $parameters;
     }
 
     public function section(string $template) {
@@ -38,7 +39,13 @@ class Template {
     }
 
     public function __get(string $name): ?string {
-        return $this->data[$name] ?? null;
+        return $this->parameters[$name] ?? "NULL";
+    }
+
+    public function render(string $templateName): string {
+        ob_start();
+        include_once "$this->basePath/$templateName.php";
+        return ob_get_clean();
     }
 }
 

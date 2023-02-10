@@ -27,7 +27,7 @@ class RouterTest extends TestCase {
             ->setMethod($method);
 
         $router->get($uri, $action);
-        $route = $router->resolve($request);
+        $route = $router->resolveRoute($request);
         $this->assertEquals($action, $route->getAction());
     }
 
@@ -58,7 +58,7 @@ class RouterTest extends TestCase {
                 ->setUri($uri)
                 ->setMethod($method);
 
-            $route = $router->resolve($request);
+            $route = $router->resolveRoute($request);
             $this->assertEquals($uri, $route->getRouteUri());
             $this->assertEquals($action, $route->getAction());
         }
@@ -93,7 +93,7 @@ class RouterTest extends TestCase {
                 ->setUri($uri)
                 ->setMethod($method);
 
-            $route = $router->resolve($request);
+            $route = $router->resolveRoute($request);
             $this->assertEquals($uri, $route->getRouteUri());
             $this->assertEquals($action, $route->getAction());
         }
@@ -132,7 +132,7 @@ class RouterTest extends TestCase {
                 ->setUri($uri)
                 ->setMethod($method);
 
-            $route = $router->resolve($request);
+            $route = $router->resolveRoute($request);
             $this->assertNotNull($route);
             $this->assertEquals($action, $route->getAction());
         }

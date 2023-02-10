@@ -83,8 +83,6 @@ class Router {
         $action = $route->getAction();
 
         $this->runMiddlewares($request, $response, $middlewares, $action);
-
-        
     }
 
     public function runMiddlewares(Request $request, Response $response, array $middlewares, Closure|array $target) {

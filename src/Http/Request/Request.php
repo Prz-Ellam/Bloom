@@ -86,6 +86,11 @@ class Request {
      */
     private array $cookies;
 
+    /**
+     * HTTP Session
+     *
+     * @var Session
+     */
     private Session $session;
 
     public function getUri(): string {

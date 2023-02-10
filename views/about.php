@@ -7,7 +7,7 @@
     <title>PHP</title>
 </head>
 <body>
-    <h1>Hola Mundo</h1>
+    <h1><?= $this->app ?></h1>
     <h2>Adios Mundo</h2>
     <p>Como estan mundo</p>
 </body>

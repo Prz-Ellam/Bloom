@@ -91,9 +91,9 @@ class Response {
      * @param string $view
      * @return self
      */
-    public function render(string $view): self {
+    public function render(string $view, array $parameters = []): self {
         $templateEngine = Application::app()->getTemplateEngine();
-        $html = $templateEngine->render($view);
+        $html = $templateEngine->render($view, $parameters);
         $this
             ->setContentType("text/html")
             ->setBody($html);

@@ -58,8 +58,8 @@ class Application {
         $this->request = $requestDirector->getRequest();
         $this->response = new Response();
 
-        $this->templateEngine = new TemplateEngine();
-        $this->templateEngine->setBasePath(dirname(__DIR__, 1) . "/views");
+        $this->templateEngine = new TemplateEngine(dirname(__DIR__, 1) . "/views");
+        //$this->templateEngine->setBasePath(dirname(__DIR__, 1) . "/views");
     }
 
     public static function app(): self {

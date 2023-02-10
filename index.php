@@ -37,7 +37,7 @@ class Middleware2 implements Middleware {
 
 $app->get('/home/:id', function() { print("Home"); });
 $app->get('/about', function($request, $response) {
-    $response->render('about');
+    $response->render('about', [ "app" => "Bloom" ]);
 });
 
 $app->get('/news', [ Middleware1::class, 'show' ], [ Middleware1::class, Middleware2::class ]);
