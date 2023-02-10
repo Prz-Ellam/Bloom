@@ -3,15 +3,90 @@
 namespace Bloom\Http\Request;
 
 use Bloom\Http\HttpMethod;
+use Bloom\Session\Session;
 
+/**
+ * Data structure with the HTTP Request data
+ */
 class Request {
+    // baseUrl
+    // body
+    // cookies
+    // fresh
+    // hostname
+    // ip
+    // ips
+    // method
+    // params
+    // path
+    // protocol
+    // query
+    // secure
+    // signed cookies
+    // stale
+    // subdomains
+    // xhr
+
+    // accepts
+    //
+
+    /**
+     * HTTP URI for the Request
+     *
+     * @var string
+     */
     private string $uri;
+
+    /**
+     * HTTP Method for the Request
+     *
+     * @var HttpMethod
+     */
     private HttpMethod $method;
+
+    /**
+     * HTTP Request headers
+     *
+     * @var array<string, string>
+     */
     private array $headers;
+
+    /**
+     * Query parameters
+     *
+     * @var array<string, string>
+     */
     private array $query;
+
+    /**
+     * HTTP Request payload
+     *
+     * @var array<string, string>
+     */
     private array $body;
+
+    /**
+     * Route parameters
+     *
+     * @var array<string, string>
+     */
     private array $params;
+
+    /**
+     * Files send for the HTTP Request
+     *
+     * @var array
+     */
     private array $files;
+
+    /**
+     * Cookies
+     *
+     * @var array
+     */
+    private array $cookies;
+
+    private Session $session;
 
     public function getUri(): string {
         return $this->uri;
@@ -31,11 +106,11 @@ class Request {
         return $this;
     } 
 
-    public function getHeaders($header = null): array|string|null {
+    public function getHeaders($header = null, $default = null): array|string|null {
         if (is_null($header)) {
             return $this->headers;
         }
-        return $this->headers[$header] ?? null;
+        return $this->headers[$header] ?? $default;
     }
 
     public function setHeaders(array $headers): self {
@@ -43,11 +118,15 @@ class Request {
         return $this;
     }
 
-    public function getQuery($name = null): array|string|null {
+    public function hasHeader(string $header): bool {
+        return isset($this->headers[$header]);
+    }
+
+    public function getQuery($name = null, $default = null): array|string|null {
         if (is_null($name)) {
             return $this->query;
         }
-        return $this->query[$name] ?? null;
+        return $this->query[$name] ?? $default;
     }
 
     public function setQuery(array $query): self {
@@ -55,11 +134,11 @@ class Request {
         return $this;
     }
 
-    public function getBody($name = null): array|string|null {
+    public function getBody($name = null, $default = null): array|string|null {
         if (is_null($name)) {
             return $this->body;
         }
-        return $this->body[$name] ?? null;
+        return $this->body[$name] ?? $default;
     }
 
     public function setBody(array $body): self {
@@ -67,11 +146,11 @@ class Request {
         return $this;
     }
 
-    public function getParams($name = null): array|string|null {
+    public function getParams($name = null, $default = null): array|string|null {
         if (is_null($name)) {
             return $this->params;
         }
-        return $this->params[$name] ?? null;
+        return $this->params[$name] ?? $default;
     }
 
     public function setParams(array $params): self {
@@ -79,11 +158,11 @@ class Request {
         return $this;
     }
 
-    public function getFiles($name = null): array|string|null {
+    public function getFiles($name = null, $default = null): array|string|null {
         if (is_null($name)) {
             return $this->files;
         }
-        return $this->files[$name] ?? null;
+        return $this->files[$name] ?? $default;
     }
 
     public function setFiles(array $files): self {
@@ -91,7 +170,16 @@ class Request {
         return $this;
     }
 
+    public function getSession(): Session {
+        return $this->session;
+    }
+
+    public function setSession(Session $session): self {
+        $this->session = $session;
+        return $this;
+    }
+
     public function __get(string $name): string {
-        return $this->body[$name] ?? null;
+        return $this->body[$name] ?? $this->params[$name] ?? null;
     }
 }

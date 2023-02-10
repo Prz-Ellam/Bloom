@@ -6,10 +6,15 @@ namespace Bloom\Templates;
  * HTML Template Engine
  */
 class TemplateEngine {
+    /**
+     * path of the folder that contains the Templates
+     *
+     * @var string
+     */
     private string $basePath = "";
 
-    public function __construct() {
-        
+    public function __construct(string $basePath) {
+        $this->basePath = $basePath;
     }
 
     /**
@@ -38,7 +43,7 @@ class TemplateEngine {
      * @param string $template
      * @return string
      */
-    public function render(string $template): string {
+    public function render(string $template, array $parameters = []): string {
         ob_start();
         include_once "$this->basePath/$template.php";
         return ob_get_clean();

@@ -29,8 +29,7 @@ class Router {
      * @param Closure|array $action
      * @return void
      */
-    public function registerRoute(HttpMethod $method, string $uri, Closure|array $action): void {
-        $middlewares = [];
+    public function registerRoute(HttpMethod $method, string $uri, Closure|array $action, array $middlewares = []): void {
         $this->routes[$method->value][$uri] = new Route($uri, $action, $middlewares); 
     }
 
@@ -60,7 +59,7 @@ class Router {
      * @param Request $request
      * @return ?Route
      */
-    public function resolve(Request $request): ?Route {
+    public function resolveRoute(Request $request): ?Route {
         $method = $request->getMethod();
         $uri = $request->getUri();
         foreach ($this->routes[$method->value] as $route) {
@@ -71,27 +70,40 @@ class Router {
         return null;
     }
 
-    public function resolve2(Request $request, Response $response) {
-        $route = $this->resolve($request);
-        $action = $route->getAction();
+    /**
+     * Undocumented function
+     *
+     * @param Request $request
+     * @param Response $response
+     * @return void
+     */
+    public function resolve(Request $request, Response $response): void {
+        $route = $this->resolveRoute($request);
         $middlewares = $route->getMiddlewares();
+        $action = $route->getAction();
 
-        if ($action instanceof Closure) {
-            $action($request, $response);
-        }
-        else if (is_array($action)) {
-            $action[0] = new $action[0];
-            call_user_func($action, $request, $response);
-        }
+        $this->runMiddlewares($request, $response, $middlewares, $action);
+
+        
     }
 
     public function runMiddlewares(Request $request, Response $response, array $middlewares, Closure|array $target) {
         if (count($middlewares) == 0) {
-            return $target($request, $response);
+            if ($target instanceof Closure) {
+                $target($request, $response);
+            }
+            else if (is_array($target)) {
+                $target[0] = new $target[0];
+                call_user_func($target, $request, $response);
+            }
+            return;
         }
-        return $middlewares[0]->handle(
+        $middleware = new $middlewares[0];
+        return $middleware->handle(
             $request, 
             $response, 
-            fn() => $this->runMiddlewares($request, $response, array_slice($middlewares, 1), $target));
+            fn() => $this->runMiddlewares($request, $response, array_slice($middlewares, 1), 
+            $target
+        ));
     }
 }

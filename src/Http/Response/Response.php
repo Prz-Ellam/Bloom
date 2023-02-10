@@ -3,19 +3,26 @@
 namespace Bloom\Http\Response;
 
 use Bloom\Application;
+use Bloom\Http\HttpStatusCode;
 
 class Response {
-    private int $code = 200;
+    private HttpStatusCode $code = HttpStatusCode::OK;
     private array $headers = [];
+    private array $cookies = [];
     private ?string $body = "";
 
-    public function status(int $code): self {
-        $this->code = $code;
+    public function setStatus(int $code): self {
+        $this->code = HttpStatusCode::from($code);
         return $this;
     }
 
-    public function getStatus(): int {
+    public function getStatus(): HttpStatusCode {
         return $this->code;
+    }
+
+    public function setCookie(string $name, string $value, int $minutes): self {
+        $this->cookies[$name] = [ $value, $minutes ];
+        return $this;
     }
 
     public function setContentType(string $value): self {
@@ -28,12 +35,29 @@ class Response {
         return $this;
     }
 
+    public function getHeader(string $header): string {
+        return $this->headers[$header];
+    }
+
     public function getBody(): ?string {
         return $this->body;
     }
 
     public function setBody(?string $body): self {
         $this->body = $body;
+        return $this;
+    }
+
+    /**
+     * Returns a HTTP Response as string
+     *
+     * @param string $data
+     * @return self
+     */
+    public function send(string $data): self {
+        $this
+            ->setContentType("text/plain")
+            ->setBody($data);
         return $this;
     }
 
@@ -50,16 +74,36 @@ class Response {
         return $this;
     }
 
-    public function view(string $view) {
-
+    /**
+     * Returns a HTTP Response as HTML Template
+     *
+     * @param string $view
+     * @return self
+     */
+    public function render(string $view): self {
         $templateEngine = Application::app()->getTemplateEngine();
         $html = $templateEngine->render($view);
         $this
             ->setContentType("text/html")
             ->setBody($html);
+
+        // delete this
+        header("Content-Type: text/html");
+        print($html);
+        
+        return $this;
     }
 
     public function redirect(string $uri) {
+        $this
+            ->setHeader("Location", $uri);
+    }
+
+    public function download(string $file) {
+
+    }
+
+    public function file(string $name) {
 
     }
 }

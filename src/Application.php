@@ -79,30 +79,30 @@ class Application {
      * @return void
      */
     public function run(): void {
-        $route = $this->router->resolve($this->request);
+        $route = $this->router->resolve($this->request, $this->response);
 
-        if (!$route) {
-            print("404 Not Found");
-            http_response_code(404);
-            exit();
-        }
+        // if (!$route) {
+        //     print("404 Not Found");
+        //     http_response_code(404);
+        //     exit();
+        // }
 
-        $middlewares = $route->getMiddlewares();
-        $action = $route->getAction();
+        // $middlewares = $route->getMiddlewares();
+        // $action = $route->getAction();
 
-        foreach ($middlewares as $middleware) {
-            $middleware($this->request, $this->response, );
-        }
+        // foreach ($middlewares as $middleware) {
+        //     $middleware($this->request, $this->response, );
+        // }
 
-        if ($action instanceof Closure) {
-            $action($this->request, $this->response);
-        }
-        else if (is_array($action)) {
-            $action[0] = new $action[0];
-            call_user_func($action, $this->request, $this->response);
-        }
+        // if ($action instanceof Closure) {
+        //     $action($this->request, $this->response);
+        // }
+        // else if (is_array($action)) {
+        //     $action[0] = new $action[0];
+        //     call_user_func($action, $this->request, $this->response);
+        // }
 
-        print($this->response->getBody());
+        //print($this->response->getBody());
     }
 
     /**
