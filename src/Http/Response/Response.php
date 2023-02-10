@@ -11,8 +11,19 @@ class Response {
     private array $cookies = [];
     private ?string $body = "";
 
-    public function setStatus(int $code): self {
-        $this->code = HttpStatusCode::from($code);
+    /**
+     * Set the status code for the HTTP Response
+     *
+     * @param integer|HttpStatusCode $code
+     * @return self
+     */
+    public function setStatus(int|HttpStatusCode $code): self {
+        if ($code instanceof HttpStatusCode) {
+            $this->code = $code;
+        }
+        else {
+            $this->code = HttpStatusCode::from($code);
+        }
         return $this;
     }
 
