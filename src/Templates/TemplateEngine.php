@@ -39,13 +39,24 @@ class TemplateEngine {
     }
 
     /**
+     * Set the template file extension
+     *
+     * @param string $extension
+     * @return self
+     */
+    public function setExtension(string $extension): self {
+        $this->extension = $extension;
+        return $this;
+    }
+
+    /**
      * Returns HTML content for a PHP Template
      *
      * @param string $template
      * @return string
      */
     public function render(string $templateName, array $parameters = []): string {
-        $template = new Template($this->basePath, $parameters);
+        $template = new Template($this->basePath, $this->extension, $parameters);
         return $template->render($templateName);
     }
 }

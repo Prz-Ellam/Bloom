@@ -51,4 +51,10 @@ class PhpNativeRequestBuilder extends RequestBuilder {
         $this->request->setFiles($_FILES);
         return $this;
     }
+
+    public function buildProtocol(): self {
+        $_SERVER["SERVER_PROTOCOL"];
+        //$this->request->set
+        return $this;
+    }
 }

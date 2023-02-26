@@ -19,9 +19,11 @@ class Template {
      * @var array
      */
     private array $parameters = [];
+    private string $extension = "php";
 
-    public function __construct(string $basePath, array $parameters = []) {
+    public function __construct(string $basePath, string $extension, array $parameters = []) {
         $this->basePath = $basePath;
+        $this->extension = $extension;
         $this->parameters = $parameters;
     }
 
@@ -38,7 +40,7 @@ class Template {
 
     }
 
-    public function __get(string $name): ?string {
+    public function __get(string $name): mixed {
         return $this->parameters[$name] ?? "NULL";
     }
 

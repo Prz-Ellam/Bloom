@@ -20,4 +20,5 @@ abstract class RequestBuilder {
     public abstract function buildBody(): self;
     public abstract function buildParams(): self;
     public abstract function buildFiles(): self;
+    public abstract function buildProtocol(): self;
 }

@@ -7,16 +7,61 @@ use Bloom\Http\Response\Response;
 
 require_once "./vendor/autoload.php";
 
-class Mock {
-    public function index() {
-        print("index");
-    }
-}
+/*
+    $input = file_get_contents("php://input");
+
+    [x] GET - urlencoded
+    [x] POST - urlencoded
+    [x] PUT - urlencoded
+    [x] PATCH - urlencoded
+    [x] DELETE - urlencoded
+
+    [x] GET - multipart
+    [] POST - multipart
+    [x] PUT - multipart
+    [x] PATCH - multipart
+    [x] DELETE - multipart
+
+    [x] GET - raw
+    [x] POST - raw
+    [x] PUT - raw
+    [x] PATCH - raw
+    [x] DELETE - raw
 
 
-$uri = "/api/v1/users/:userId/products/:productId";
-$action = fn() => "test";
-$route = new Bloom\Router\Route($uri, $action);
+
+
+    $input = $_POST
+
+    [] GET - urlencoded
+    [x] POST - urlencoded
+    [] PUT - urlencoded
+    [] PATCH - urlencoded
+    [] DELETE - urlencoded
+
+    [] GET - multipart
+    [x] POST - multipart
+    [] PUT - multipart
+    [] PATCH - multipart
+    [] DELETE - multipart
+
+    [] GET - raw
+    [] POST - raw
+    [] PUT - raw
+    [] PATCH - raw
+    [] DELETE - raw
+
+
+
+
+*/
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+
+
+
 
 $app = Application::app();
 // $app->get('/', function($request, $response) { print("Hello Bloom"); });
@@ -37,9 +82,9 @@ class Middleware2 implements Middleware {
 
 $app->get('/home/:id', function() { print("Home"); });
 $app->get('/about', function($request, $response) {
-    $response->render('about', [ "app" => "Bloom" ]);
+    $response->render('about', [ "app" => [ "a", "b" ] ]);
 });
 
-$app->get('/news', [ Middleware1::class, 'show' ], [ Middleware1::class, Middleware2::class ]);
+$app->get('/news', [ Middleware1::class, 'handle' ], [ Middleware1::class, Middleware2::class ]);
 
 $app->run();

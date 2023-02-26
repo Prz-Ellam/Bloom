@@ -8,7 +8,7 @@ use Bloom\Http\Response\Response;
 use Closure;
 
 class BodyParser implements Middleware {
-    public function handle(Request $request, Response $response, Closure $next): void {
+    public function handle(Request $request, Response $response, Closure $next): mixed {
 
     }
 }

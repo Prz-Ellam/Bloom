@@ -10,17 +10,17 @@ use Bloom\Session\Session;
  */
 class Request {
     // baseUrl
-    // body
+    // [x] body
     // cookies
     // fresh
     // hostname
     // ip
     // ips
-    // method
-    // params
+    // [x] method
+    // [x] params
     // path
     // protocol
-    // query
+    // [x] query
     // secure
     // signed cookies
     // stale

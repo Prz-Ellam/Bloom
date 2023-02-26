@@ -58,7 +58,8 @@ class Application {
         $this->request = $requestDirector->getRequest();
         $this->response = new Response();
 
-        $this->templateEngine = new TemplateEngine(dirname(__DIR__, 1) . "/views");
+        // TODO: Refactor this
+        $this->templateEngine = new TemplateEngine($_ENV["VIEW_PATH"]);
         //$this->templateEngine->setBasePath(dirname(__DIR__, 1) . "/views");
     }
 
