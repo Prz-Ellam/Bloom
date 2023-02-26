@@ -46,7 +46,7 @@ class Template {
 
     public function render(string $templateName): string {
         ob_start();
-        include_once "$this->basePath/$templateName.php";
+        include_once "$this->basePath/$templateName.$this->extension";
         return ob_get_clean();
     }
 }
