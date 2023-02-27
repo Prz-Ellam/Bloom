@@ -14,6 +14,7 @@ class Router {
      * @var array<HttpMethod, Route>
      */
     private array $routes = [];
+    private Closure|array $notFound = null;
 
     public function __construct() {
         foreach (HttpMethod::cases() as $method) {
@@ -79,6 +80,11 @@ class Router {
      */
     public function resolve(Request $request, Response $response): void {
         $route = $this->resolveRoute($request);
+
+        if (!$route) {
+            call_user_func($this->notFound, $request, $response);
+        }
+
         $middlewares = $route->getMiddlewares();
         $action = $route->getAction();
 
@@ -103,5 +109,9 @@ class Router {
             fn() => $this->runMiddlewares($request, $response, array_slice($middlewares, 1), 
             $target
         ));
+    }
+
+    public function setNotFound(Closure|array $action) {
+        $this->notFound = $action;
     }
 }

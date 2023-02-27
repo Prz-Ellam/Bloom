@@ -81,29 +81,6 @@ class Application {
      */
     public function run(): void {
         $route = $this->router->resolve($this->request, $this->response);
-
-        // if (!$route) {
-        //     print("404 Not Found");
-        //     http_response_code(404);
-        //     exit();
-        // }
-
-        // $middlewares = $route->getMiddlewares();
-        // $action = $route->getAction();
-
-        // foreach ($middlewares as $middleware) {
-        //     $middleware($this->request, $this->response, );
-        // }
-
-        // if ($action instanceof Closure) {
-        //     $action($this->request, $this->response);
-        // }
-        // else if (is_array($action)) {
-        //     $action[0] = new $action[0];
-        //     call_user_func($action, $this->request, $this->response);
-        // }
-
-        //print($this->response->getBody());
     }
 
     /**
@@ -131,5 +108,9 @@ class Application {
 
     public function delete(string $uri, Closure|array $action, array $middlewares = []): void {
         $this->router->delete($uri, $action, $middlewares);
+    }
+
+    public function setNotFound(Closure|array $action) {
+        $this->router->setNotFound($action);
     }
 }
