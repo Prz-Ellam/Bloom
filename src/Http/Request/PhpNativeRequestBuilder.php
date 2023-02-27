@@ -14,7 +14,7 @@ class PhpNativeRequestBuilder extends RequestBuilder {
      * @return void
      */
     public function buildUri(): self {
-        $this->request->setUri($_SERVER["REQUEST_URI"]);
+        $this->request->setUri(parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH));
         return $this;
     }
 

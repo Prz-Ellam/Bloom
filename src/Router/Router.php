@@ -14,7 +14,7 @@ class Router {
      * @var array<HttpMethod, Route>
      */
     private array $routes = [];
-    private Closure|array $notFound;
+    private Closure|array|null $notFound = null;
 
     public function __construct() {
         foreach (HttpMethod::cases() as $method) {
