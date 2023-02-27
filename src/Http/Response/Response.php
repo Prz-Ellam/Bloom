@@ -108,6 +108,9 @@ class Response {
     public function redirect(string $uri) {
         $this
             ->setHeader("Location", $uri);
+
+        // TODO: Temporal
+        header("Location: $uri");
     }
 
     public function download(string $file) {
