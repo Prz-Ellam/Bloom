@@ -83,6 +83,7 @@ class Router {
 
         if (!$route) {
             call_user_func($this->notFound, $request, $response);
+            exit;
         }
 
         $middlewares = $route->getMiddlewares();
