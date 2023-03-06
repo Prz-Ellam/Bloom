@@ -14,11 +14,14 @@ use Bloom\Session\PhpNativeSession;
 use Bloom\Session\Session;
 use Bloom\Templates\TemplateEngine;
 use Closure;
+use Dotenv\Dotenv;
 
 /**
  * Kernel of the application
  */
 class Application {
+    private static string $root;
+
     private Request $request;
     private Response $response;
     private ResponseEmitter $responseEmitter;
@@ -30,6 +33,9 @@ class Application {
     private static ?self $instance = null;
 
     private function __construct() {
+        
+        $this->loadConfig();
+
         $this->router = new Router();
 
         $requestDirector = new RequestDirector();
@@ -62,15 +68,24 @@ class Application {
 
     }
 
-    public static function app(): self {
+    public static function app(string $root): self {
         if (!self::$instance) {
+            self::$root = $root;
             self::$instance = new self();
         }
         return self::$instance;
     }
 
+    public function loadConfig() {
+        Dotenv::createImmutable(self::$root)->load();
+    }
+
     public function getTemplateEngine(): TemplateEngine {
         return $this->templateEngine;
+    }
+
+    public function getDatabaseDriver(): DatabaseDriver {
+        return $this->databaseDriver;
     }
 
     /**

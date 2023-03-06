@@ -26,5 +26,8 @@
     "require-dev": {
         "phpunit/phpunit": "^10.0",
         "friendsofphp/php-cs-fixer": "^3.9"
+    },
+    "require": {
+        "vlucas/phpdotenv": "^5.5"
     }
 }

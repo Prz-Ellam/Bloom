@@ -64,7 +64,7 @@ error_reporting(E_ALL);
 $_ENV["VIEW_PATH"] = __DIR__ . '/views';
 
 
-$app = Application::app();
+$app = Application::app(__DIR__);
 // $app->get('/', function($request, $response) { print("Hello Bloom"); });
 
 class Middleware1 implements Middleware {
