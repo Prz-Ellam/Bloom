@@ -51,7 +51,7 @@ class Application {
         $this->response = new Response();
         $this->responseEmitter = new ResponseEmitter();
 
-        $this->templateEngine = new TemplateEngine(dirname(self::$root, 1));
+        $this->templateEngine = new TemplateEngine(self::$root . "/views");
 
         $this->databaseDriver = new PDODatabaseDriver();
         $this->databaseDriver->connect(
