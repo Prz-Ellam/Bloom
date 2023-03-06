@@ -33,7 +33,7 @@ class Application {
     private static ?self $instance = null;
 
     private function __construct() {
-        
+
         $this->loadConfig();
 
         $this->router = new Router();
@@ -68,7 +68,7 @@ class Application {
 
     }
 
-    public static function app(string $root): self {
+    public static function app(string $root = ""): self {
         if (!self::$instance) {
             self::$root = $root;
             self::$instance = new self();
