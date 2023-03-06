@@ -2,6 +2,6 @@
 
 namespace Bloom\Templates;
 
-interface Engine {
+interface TemplateEngineInterface {
 
 }

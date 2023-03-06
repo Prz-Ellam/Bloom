@@ -104,7 +104,7 @@ $app->get('/about', function(Request $request, Response $response) {
     //$session->destroy();
     //$session->set("id", 25);
 
-    $response->render('about', [ "app" => [1, 2, "Hola"] ]);
+    $response->render('info');
 });
 
 $app->get('/news', [ Middleware1::class, 'handle' ], [ Middleware1::class, Middleware2::class ]);

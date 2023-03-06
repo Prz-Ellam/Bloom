@@ -20,6 +20,9 @@ class Template {
      */
     private array $parameters = [];
     private string $extension = "php";
+    private string $fileExtension = "php";
+
+    private string $content = "";
 
     public function __construct(string $basePath, string $extension, array $parameters = []) {
         $this->basePath = $basePath;
@@ -44,13 +47,25 @@ class Template {
         if (is_array($this->parameters[$name])) {
             return json_encode($this->parameters[$name]);
         }
-
         return $this->parameters[$name] ?? "NULL";
     }
 
     public function render(string $templateName): string {
         ob_start();
         include_once "$this->basePath/$templateName.$this->extension";
+        $this->content = ob_get_clean();
+
+        if (is_null($this->layoutName))
+            return $this->content;
+        else {
+            return $this->renderLayout();
+        }
+    }
+
+    public function renderLayout(): string {
+        ob_start();
+        include_once "$this->basePath/$this->layoutName.$this->extension";
+        $this->layoutName = null;
         return ob_get_clean();
     }
 }

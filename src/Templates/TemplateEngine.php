@@ -13,6 +13,7 @@ class TemplateEngine {
      */
     private string $basePath = "";
     private string $extension = "php";
+    private string $fileExtension = "php";
 
     public function __construct(string $basePath) {
         $this->basePath = $basePath;
@@ -36,6 +37,15 @@ class TemplateEngine {
     public function setBasePath(string $basePath): self {
         $this->basePath = $basePath;
         return $this;
+    }
+
+    /**
+     * Returns the extension of the Template Engine
+     *
+     * @return string
+     */
+    public function getExtension(): string {
+        return $this->extension;
     }
 
     /**
