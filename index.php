@@ -61,7 +61,7 @@ error_reporting(E_ALL);
 
 
 
-
+$_ENV["VIEW_PATH"] = __DIR__ . '/views';
 
 $app = Application::app();
 // $app->get('/', function($request, $response) { print("Hello Bloom"); });
@@ -79,6 +79,20 @@ class Middleware2 implements Middleware {
         $next();
     }
 }
+
+$app->get('/a/:id', function(Request $request, $response) {
+    $response->json($request->getParams());
+});
+
+$app->post('/', function($request, $response) {
+    $response->json($request->getBody());
+});
+
+$app->put('/', function($request, $response) {
+    $response->json($request->getBody());
+});
+
+
 
 $app->get('/home/:id', function() { print("Home"); });
 $app->get('/about', function($request, $response) {

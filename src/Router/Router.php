@@ -2,6 +2,7 @@
 
 namespace Bloom\Router;
 
+use Bloom\Http\Exceptions\HttpNotFoundException;
 use Bloom\Http\HttpMethod;
 use Bloom\Http\Request\Request;
 use Bloom\Http\Response\Response;
@@ -13,9 +14,12 @@ class Router {
      *
      * @var array<HttpMethod, Route>
      */
-    private array $routes = [];
+    protected array $routes = [];
     private Closure|array|null $notFound = null;
 
+    /**
+     * Initialize all HTTP Methods in $routes array
+     */
     public function __construct() {
         foreach (HttpMethod::cases() as $method) {
             $this->routes[$method->value] = [];
@@ -55,7 +59,7 @@ class Router {
     }
 
     /**
-     * Find the action of a HTTP Request
+     * Find the route of a HTTP Request
      *
      * @param Request $request
      * @return ?Route
@@ -72,7 +76,7 @@ class Router {
     }
 
     /**
-     * Undocumented function
+     * Execute the route action
      *
      * @param Request $request
      * @param Response $response
@@ -82,9 +86,11 @@ class Router {
         $route = $this->resolveRoute($request);
 
         if (!$route) {
-            call_user_func($this->notFound, $request, $response);
-            exit;
+            throw new HttpNotFoundException();
         }
+
+        // Weird
+        $request->setParams($route->getParameters($request->getUri()));
 
         $middlewares = $route->getMiddlewares();
         $action = $route->getAction();
@@ -92,6 +98,15 @@ class Router {
         $this->runMiddlewares($request, $response, $middlewares, $action);
     }
 
+    /**
+     * Execute the register middlewares and the action of a Route
+     *
+     * @param Request $request
+     * @param Response $response
+     * @param array $middlewares
+     * @param Closure|array $target
+     * @return void
+     */
     public function runMiddlewares(Request $request, Response $response, array $middlewares, Closure|array $target) {
         if (count($middlewares) == 0) {
             if ($target instanceof Closure) {

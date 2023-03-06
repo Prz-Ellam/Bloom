@@ -6,6 +6,7 @@ use Bloom\Http\Request\PhpNativeRequestBuilder;
 use Bloom\Http\Request\Request;
 use Bloom\Http\Request\RequestDirector;
 use Bloom\Http\Response\Response;
+use Bloom\Http\Response\ResponseEmitter;
 use Bloom\Router\Router;
 use Bloom\Templates\TemplateEngine;
 use Closure;
@@ -27,6 +28,8 @@ class Application {
      * @var Response
      */
     private Response $response;
+
+    private ResponseEmitter $responseEmitter;
 
     /**
      * Router of the application
@@ -57,6 +60,7 @@ class Application {
         $requestDirector->buildRequest();
         $this->request = $requestDirector->getRequest();
         $this->response = new Response();
+        $this->responseEmitter = new ResponseEmitter();
 
         // TODO: Refactor this
         $this->templateEngine = new TemplateEngine($_ENV["VIEW_PATH"]);
@@ -80,7 +84,8 @@ class Application {
      * @return void
      */
     public function run(): void {
-        $route = $this->router->resolve($this->request, $this->response);
+        $this->router->resolve($this->request, $this->response);
+        $this->responseEmitter->emit($this->response);
     }
 
     /**

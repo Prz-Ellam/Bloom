@@ -46,6 +46,10 @@ class Response {
         return $this;
     }
 
+    public function getHeaders(): array {
+        return $this->headers;
+    }
+
     public function getHeader(string $header): string {
         return $this->headers[$header];
     }
@@ -97,20 +101,13 @@ class Response {
         $this
             ->setContentType("text/html")
             ->setBody($html);
-
-        // delete this
-        header("Content-Type: text/html");
-        print($html);
-        
         return $this;
     }
 
     public function redirect(string $uri) {
         $this
             ->setHeader("Location", $uri);
-
-        // TODO: Temporal
-        header("Location: $uri");
+        return $this;
     }
 
     public function download(string $file) {
