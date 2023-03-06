@@ -41,6 +41,10 @@ class Template {
     }
 
     public function __get(string $name): mixed {
+        if (is_array($this->parameters[$name])) {
+            return json_encode($this->parameters[$name]);
+        }
+
         return $this->parameters[$name] ?? "NULL";
     }
 

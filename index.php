@@ -63,6 +63,7 @@ error_reporting(E_ALL);
 
 $_ENV["VIEW_PATH"] = __DIR__ . '/views';
 
+
 $app = Application::app();
 // $app->get('/', function($request, $response) { print("Hello Bloom"); });
 
@@ -94,9 +95,16 @@ $app->put('/', function($request, $response) {
 
 
 
-$app->get('/home/:id', function() { print("Home"); });
-$app->get('/about', function($request, $response) {
-    $response->render('about', [ "app" => [ "a", "b" ] ]);
+$app->get('/home/:id', function(Request $request, Response $response) { 
+    $response->json($request->getParams());
+});
+$app->get('/about', function(Request $request, Response $response) {
+    $session = $request->getSession();
+     
+    //$session->destroy();
+    //$session->set("id", 25);
+
+    $response->render('about', [ "app" => [1, 2, "Hola"] ]);
 });
 
 $app->get('/news', [ Middleware1::class, 'handle' ], [ Middleware1::class, Middleware2::class ]);

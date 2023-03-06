@@ -2,12 +2,16 @@
 
 namespace Bloom;
 
+use Bloom\Database\DatabaseDriver;
+use Bloom\Database\PDODatabaseDriver;
 use Bloom\Http\Request\PhpNativeRequestBuilder;
 use Bloom\Http\Request\Request;
 use Bloom\Http\Request\RequestDirector;
 use Bloom\Http\Response\Response;
 use Bloom\Http\Response\ResponseEmitter;
 use Bloom\Router\Router;
+use Bloom\Session\PhpNativeSession;
+use Bloom\Session\Session;
 use Bloom\Templates\TemplateEngine;
 use Closure;
 
@@ -15,41 +19,14 @@ use Closure;
  * Kernel of the application
  */
 class Application {
-    /**
-     * HTTP Request structure
-     *
-     * @var Request
-     */
     private Request $request;
-
-    /**
-     * HTTP Response structure
-     *
-     * @var Response
-     */
     private Response $response;
-
     private ResponseEmitter $responseEmitter;
-
-    /**
-     * Router of the application
-     *
-     * @var Router
-     */
+    private Session $session;
     private Router $router;
-
-    /**
-     * HTML Template for rendering views
-     *
-     * @var TemplateEngine
-     */
     private TemplateEngine $templateEngine;
+    private DatabaseDriver $databaseDriver;
 
-    /**
-     * Unique instance of the Application
-     *
-     * @var self|null
-     */
     private static ?self $instance = null;
 
     private function __construct() {
@@ -58,13 +35,31 @@ class Application {
         $requestDirector = new RequestDirector();
         $requestDirector->setRequestBuilder(new PhpNativeRequestBuilder());
         $requestDirector->buildRequest();
+
+        $this->session = new PhpNativeSession();
+        $this->session->create();
+        $this->session->regenerate();
         $this->request = $requestDirector->getRequest();
+        $this->request->setSession($this->session);
+
         $this->response = new Response();
         $this->responseEmitter = new ResponseEmitter();
 
         // TODO: Refactor this
         $this->templateEngine = new TemplateEngine($_ENV["VIEW_PATH"]);
         //$this->templateEngine->setBasePath(dirname(__DIR__, 1) . "/views");
+
+        $this->databaseDriver = new PDODatabaseDriver();
+        $this->databaseDriver->connect(
+            $_ENV["DATABASE_PROTOCOL"] ?? "", 
+            $_ENV["DATABASE_HOST"] ?? "", 
+            $_ENV["DATABASE_PORT"] ?? "", 
+            $_ENV["DATABASE_USERNAME"] ?? "", 
+            $_ENV["DATABASE_PASSWORD"] ?? "", 
+            $_ENV["DATABASE_NAME"] ?? ""
+        );
+
+
     }
 
     public static function app(): self {

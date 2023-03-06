@@ -2,7 +2,14 @@
 
 namespace Bloom\Session;
 
+/**
+ * Implementation of the HTTP Session using default PHP Session
+ */
 class PhpNativeSession implements Session {
+    public function __construct() {
+        
+    }
+
     public function create(): void {
         session_start();
     }
@@ -25,6 +32,10 @@ class PhpNativeSession implements Session {
 
     public function has(string $key): bool {
         return isset($_SESSION[$key]);
+    }
+
+    public function regenerate(): void {
+        session_regenerate_id();
     }
 
     public function destroy() {
