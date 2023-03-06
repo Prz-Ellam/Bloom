@@ -3,6 +3,7 @@
 namespace Bloom\Http\Request;
 
 use Bloom\Http\HttpMethod;
+use Bloom\Http\UploadedFile;
 use Bloom\Session\Session;
 
 /**
@@ -163,7 +164,7 @@ class Request {
         return $this;
     }
 
-    public function getFiles($name = null, $default = null): array|string|null {
+    public function getFiles($name = null, $default = null): UploadedFile|null {
         if (is_null($name)) {
             return $this->files;
         }
