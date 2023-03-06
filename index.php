@@ -4,6 +4,7 @@ use Bloom\Application;
 use Bloom\Http\Middleware;
 use Bloom\Http\Request\Request;
 use Bloom\Http\Response\Response;
+use Bloom\Http\UploadedFile;
 
 require_once "./vendor/autoload.php";
 
@@ -98,9 +99,11 @@ $app->put('/', function($request, $response) {
 $app->get('/home/:id', function(Request $request, Response $response) { 
     $response->json($request->getParams());
 });
-$app->get('/about', function(Request $request, Response $response) {
-    $session = $request->getSession();
-     
+$app->post('/about', function(Request $request, Response $response) {
+    //$session = $request->getSession();
+    $f = $request->getFiles();
+    var_dump($f);
+die;
     //$session->destroy();
     //$session->set("id", 25);
 

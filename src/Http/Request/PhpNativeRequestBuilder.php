@@ -3,6 +3,7 @@
 namespace Bloom\Http\Request;
 
 use Bloom\Http\HttpMethod;
+use Bloom\Http\UploadedFile;
 
 /**
  * Concrete implementation of the RequestBuilder for the PHP Development Server
@@ -48,7 +49,7 @@ class PhpNativeRequestBuilder extends RequestBuilder {
     }
 
     public function buildFiles(): self {
-        $this->request->setFiles($_FILES);
+        $this->request->setFiles($this->createUploadedFiles($_FILES));
         return $this;
     }
 
@@ -176,7 +177,6 @@ class PhpNativeRequestBuilder extends RequestBuilder {
         return $data;
     }
 
-
     private function transformData($data, $name, $value) {
         $isArray = strpos($name, '[]');
         if ($isArray && (($isArray + 2) == strlen($name))) {
@@ -186,5 +186,41 @@ class PhpNativeRequestBuilder extends RequestBuilder {
             $data[$name] = $value;
         }
         return $data;
+    }
+
+    public function createUploadedFiles($files): array {
+        $outputFiles = [];
+        foreach ($files as $key => $file) {
+            if (count($file) !== count($file, COUNT_RECURSIVE)) {
+                // Multidimensional
+                $transpose = [];
+                foreach ($file as $pKet => $subarr) {
+                    foreach ($subarr as $subkey => $subvalue) {
+                        $transpose[$subkey][$pKet] = $subvalue;
+                    }
+                }
+                
+                foreach ($transpose as $pKey => $value) {
+                    $outputFiles[$key][$pKey] = new UploadedFile(
+                        $value["name"] ?? null,
+                        $value["path"] ?? null,
+                        $value["tmp_name"] ?? null,
+                        $value["size"] ?? null,
+                        $value["type"] ?? null
+                    );
+                }
+            }
+            else {
+                // Not multidimensional
+                $outputFiles[$key] = new UploadedFile(
+                    $file["name"] ?? null,
+                    $file["path"] ?? null,
+                    $file["tmp_name"] ?? null,
+                    $file["size"] ?? null,
+                    $file["type"] ?? null
+                );
+            }
+        }
+        return $outputFiles;
     }
 }
