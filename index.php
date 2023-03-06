@@ -80,8 +80,8 @@ class Middleware2 implements Middleware {
     }
 }
 
-$app->get('/a/:id', function(Request $request, $response) {
-    $response->json($request->getParams());
+$app->get('/', function(Request $request, $response) {
+    $response->json($request->getBody());
 });
 
 $app->post('/', function($request, $response) {

@@ -79,32 +79,112 @@ class PhpNativeRequestBuilder extends RequestBuilder {
             "DELETE_MULTIPART" => [ "DELETE", "multipart/form-data" ]
         ];
 
-        $contentType = getallheaders();
-        $contentType = $contentType["Content-Type"] ?? "";
+        // Content Type
+        $contentType = explode(';', $_SERVER["CONTENT_TYPE"] ?? "")[0];
         $method = $_SERVER["REQUEST_METHOD"];
 
         $requestType = [ $method, $contentType ];
-
-        switch ($requestType) {
-            case $requestsTable["GET_JSON"]: {
-                echo "json";
-                break;
-            }
-            case $requestsTable["GET_MULTIPART"]: {
-                echo "aqui";
-                break;
-            }
-        }
-
         $input = file_get_contents("php://input");
 
-        if ($contentType == "application/json") {
-            $body = json_decode($input, true);
-            return $body;
+        switch ($requestType) {
+            case $requestsTable["GET_URL"]:
+            case $requestsTable["POST_URL"]:
+            case $requestsTable["PUT_URL"]:
+            case $requestsTable["PATCH_URL"]:
+            case $requestsTable["DELETE_URL"]: {
+                parse_str($input, $body);
+                return $body;
+            }
+            case $requestsTable["GET_JSON"]:
+            case $requestsTable["POST_JSON"]:
+            case $requestsTable["PUT_JSON"]:
+            case $requestsTable["PATCH_JSON"]:
+            case $requestsTable["DELETE_JSON"]: {
+                $body = json_decode($input, true);
+                return $body;
+            }
+            case $requestsTable["GET_MULTIPART"]:
+            case $requestsTable["PUT_MULTIPART"]:
+            case $requestsTable["PATCH_MULTIPART"]:
+            case $requestsTable["DELETE_MULTIPART"]: {
+                $data = $this->decode($input);
+                return $data;
+            }
+            case $requestsTable["POST_MULTIPART"]: {
+                return $_POST;
+            }
+            default: {
+                return [];
+            }
         }
-        else {
-            parse_str($input, $body);
-            return $body;
+    }
+
+    public function decode(string $rawData) {
+        $files = [];
+        $data  = [];
+        $boundary = substr($rawData, 0, strpos($rawData, "\r\n"));
+        // Fetch and process each part
+        $parts = $rawData ? array_slice(explode($boundary, $rawData), 1) : [];
+        foreach ($parts as $part) {
+            // If this is the last part, break
+            if ($part == "--\r\n") {
+                break;
+            }
+            // Separate content from headers
+            $part = ltrim($part, "\r\n");
+            list($rawHeaders, $content) = explode("\r\n\r\n", $part, 2);
+            $content = substr($content, 0, strlen($content) - 2);
+            // Parse the headers list
+            $rawHeaders = explode("\r\n", $rawHeaders);
+            $headers    = array();
+            foreach ($rawHeaders as $header) {
+                list($name, $value) = explode(':', $header);
+                $headers[strtolower($name)] = ltrim($value, ' ');
+            }
+            // Parse the Content-Disposition to get the field name, etc.
+            if (isset($headers['content-disposition'])) {
+                $filename = null;
+                preg_match(
+                    '/^form-data; *name="([^"]+)"(; *filename="([^"]+)")?/',
+                    $headers['content-disposition'],
+                    $matches
+                );
+                $fieldName = $matches[1];
+                $fileName  = (isset($matches[3]) ? $matches[3] : null);
+                // If we have a file, save it. Otherwise, save the data.
+                if ($fileName !== null) {
+                    $localFileName = tempnam(sys_get_temp_dir(), 'sfy');
+                    file_put_contents($localFileName, $content);
+                    $files = $this->transformData($files, $fieldName, [
+                        'name'     => $fileName,
+                        'type'     => $headers['content-type'],
+                        'tmp_name' => $localFileName,
+                        'error'    => 0,
+                        'size'     => filesize($localFileName)
+                    ]);
+                    // register a shutdown function to cleanup the temporary file
+                    register_shutdown_function(function () use ($localFileName) {
+                        unlink($localFileName);
+                    });
+                } else {
+                    $data = $this->transformData($data, $fieldName, $content);
+                }
+            }
         }
+
+        $_FILES = $files;
+        return $data;
+    }
+
+
+    private function transformData($data, $name, $value) {
+        $isArray = strpos($name, '[]');
+        if ($isArray && (($isArray + 2) == strlen($name))) {
+            $name = str_replace('[]', '', $name);
+            $data[$name][]= $value;
+        } else {
+            $data[$name] = $value;
+        }
+        return $data;
     }
 }
