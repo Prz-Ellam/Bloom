@@ -164,7 +164,7 @@ class Request {
         return $this;
     }
 
-    public function getFiles($name = null, $default = null): UploadedFile|null {
+    public function getFiles($name = null, $default = null): array|UploadedFile|null {
         if (is_null($name)) {
             return $this->files;
         }
