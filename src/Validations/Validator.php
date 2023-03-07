@@ -19,16 +19,17 @@ class Validator {
         $this->status = null;
     }
 
-    public function validate() : array {
+    public function validate() : bool {
         if (is_object($this->instance)) {
             return $this->validateObject();
         }
-        elseif (is_array($this->instance)) {
-            return $this->validateArray();
-        }
-        else {
-            return [];
-        }
+        return false;
+        // elseif (is_array($this->instance)) {
+        //     return $this->validateArray();
+        // }
+        // else {
+        //     return [];
+        // }
     }
 
     /**
