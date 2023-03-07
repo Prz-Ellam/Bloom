@@ -56,11 +56,11 @@ class TemplateTest extends TestCase {
         );
     }
 
-    public function testRenderViewWithLayout() {
+    // public function testRenderViewWithLayout() {
 
-    }
+    // }
 
-    public function testRenderViewWithParametersAndLayout() {
+    // public function testRenderViewWithParametersAndLayout() {
 
-    }
+    // }
 }
