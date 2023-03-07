@@ -2,8 +2,10 @@
 
 namespace Bloom\Validations\Rules;
 
+use Attribute;
 use Bloom\Validations\ValidationRule;
 
+#[Attribute]
 class EqualTo extends ValidationRule {
     private string $fieldName;
 
