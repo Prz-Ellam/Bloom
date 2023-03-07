@@ -14,7 +14,7 @@ class Min extends ValidationRule {
         $this->message = $message ?? "El campo tiene un valor mayor a $this->min";
     }
 
-    public function isValid(mixed $input): bool {
-        return $input > $this->min;
+    public function isValid(string $field, array $inputs): bool {
+        return $inputs[$field] > $this->min;
     }
 }

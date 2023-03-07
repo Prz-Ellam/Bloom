@@ -11,7 +11,7 @@ class HasMinus extends ValidationRule {
         $this->message = $message ?? "El campo ocupa al menos una minúscula";
     }
 
-    public function isValid(mixed $input): bool {
-        return preg_match("/[a-z]/", $input);
+    public function isValid(string $field, array $inputs): bool {
+        return preg_match("/[a-z]/", $inputs[$field]);
     }
 }

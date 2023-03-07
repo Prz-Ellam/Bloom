@@ -13,7 +13,7 @@ class Email extends ValidationRule {
         $this->message = $message ?? "El campo no cumple con el formato de email";
     }
 
-    public function isValid(mixed $value): bool {
-        return preg_match(self::EMAIL_REGEX, $value);
+    public function isValid(string $field, array $inputs): bool {
+        return preg_match(self::EMAIL_REGEX, $inputs[$field]);
     }
 }

@@ -11,7 +11,7 @@ abstract class ValidationRule {
      * @param mixed $input
      * @return boolean
      */
-    public abstract function isValid(mixed $input): bool;
+    public abstract function isValid(string $field, array $inputs): bool;
     
     public function message(): string {
         return $this->message;

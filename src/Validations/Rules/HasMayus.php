@@ -11,7 +11,7 @@ class HasMayus extends ValidationRule {
         $this->message = $message ?? "El campo ocupa al menos una mayúscula";
     }
 
-    public function isValid(mixed $input): bool {
-        return preg_match("/[A-Z]/", $input);
+    public function isValid(string $field, array $inputs): bool {
+        return preg_match("/[A-Z]/", $inputs[$field]);
     }
 }

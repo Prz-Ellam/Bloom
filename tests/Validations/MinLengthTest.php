@@ -18,8 +18,8 @@ class MinLengthTest extends TestCase {
             "0123"
         ];
 
-        foreach ($values as $value) {
-            $this->assertEquals(false, $minLength->isValid($value));
+        foreach ($values as $key => $value) {
+            $this->assertEquals(false, $minLength->isValid($key, $values));
         }
 
         $valid = [
@@ -29,8 +29,8 @@ class MinLengthTest extends TestCase {
             "01234567"
         ];
 
-        foreach ($valid as $value) {
-            $this->assertEquals(true, $minLength->isValid($value));
+        foreach ($valid as $key => $value) {
+            $this->assertEquals(true, $minLength->isValid($key, $valid));
         }
 
     }

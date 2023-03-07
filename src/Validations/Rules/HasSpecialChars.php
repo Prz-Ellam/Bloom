@@ -13,7 +13,7 @@ class HasSpecialChars extends ValidationRule {
         $this->message = $message ?? "El campo ocupa al menos un carácter especial";
     }
 
-    public function isValid(mixed $input): bool {
-        return preg_match($this::REGEX, $input);
+    public function isValid(string $field, array $inputs): bool {
+        return preg_match($this::REGEX, $inputs[$field]);
     }
 }

@@ -11,7 +11,7 @@ class Number extends ValidationRule {
         $this->message = $message ?? "El campo debe ser un número";
     }
 
-    public function isValid(mixed $input): bool {
-        return isset($input) && is_numeric($input);
+    public function isValid(string $field, array $inputs): bool {
+        return isset($inputs[$field]) && is_numeric($inputs[$field]);
     }
 }

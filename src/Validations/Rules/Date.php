@@ -12,9 +12,9 @@ class Date extends ValidationRule {
         $this->message = $message ?? "El campo no es una fecha";
     }
 
-    public function isValid(mixed $input): bool {
+    public function isValid(string $field, array $inputs): bool {
         $format = 'Y-m-d';
-        $d = DateTime::createFromFormat($format, $input);
-        return $d && $d->format($format) === $input;
+        $d = DateTime::createFromFormat($format, $inputs[$field]);
+        return $d && $d->format($format) === $inputs[$field];
     }
 }

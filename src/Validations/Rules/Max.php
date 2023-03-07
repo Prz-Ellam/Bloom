@@ -14,7 +14,7 @@ class Max extends ValidationRule {
         $this->message = $message ?? "El campo tiene un valor menor a $this->max";
     }
 
-    public function isValid(mixed $input): bool {
-        return $input <= $this->max;
+    public function isValid(string $field, array $inputs): bool {
+        return $inputs[$field] <= $this->max;
     }
 }

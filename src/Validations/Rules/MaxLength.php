@@ -14,7 +14,7 @@ class MaxLength extends ValidationRule {
         $this->message = $message ?? "El campo debe medir menos de $this->maxLength carácteres";
     }
 
-    public function isValid(mixed $value): bool {
-        return strlen($value) <= $this->maxLength;
+    public function isValid(string $field, array $inputs): bool {
+        return strlen($inputs[$field]) <= $this->maxLength;
     }
 }

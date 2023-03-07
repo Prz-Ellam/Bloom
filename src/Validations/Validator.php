@@ -50,9 +50,9 @@ class Validator {
                 $attributeInstance = $attribute->newInstance();
                 $class = new ReflectionClass($attributeInstance);
                 $attributeName = $class->getShortName();
-                $status = $attributeInstance->isValid($values[$property]);
+                $status = $attributeInstance->isValid($property, $values);
 
-                if ($status === false) {
+                if (!$status) {
                     $results[$property][$attributeName] = $attributeInstance->message();
                 }
             }

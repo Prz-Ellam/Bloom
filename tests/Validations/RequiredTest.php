@@ -25,8 +25,8 @@ class RequiredTest extends TestCase {
             [ 1, 2, 3]
         ];
 
-        foreach ($valid as $value) {
-            $this->assertEquals(true, $required->isValid($value));
+        foreach ($valid as $key => $value) {
+            $this->assertEquals(true, $required->isValid($key, $valid));
         }
 
         $notValid = [
@@ -35,8 +35,8 @@ class RequiredTest extends TestCase {
             []
         ];
 
-        foreach ($notValid as $value) {
-            $this->assertEquals(false, $required->isValid($value));
+        foreach ($notValid as $key => $value) {
+            $this->assertEquals(false, $required->isValid($key, $notValid));
         }
 
     }

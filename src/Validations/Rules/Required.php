@@ -11,7 +11,7 @@ class Required extends ValidationRule {
         $this->message = $message ?? "El campo es requerido";
     }
 
-    public function isValid(mixed $value): bool {
-        return isset($value) && $value !== "" && $value !== [];
+    public function isValid(string $field, array $inputs): bool {
+        return isset($inputs[$field]) && $inputs[$field] !== "" && $inputs[$field] !== [];
     }
 }
