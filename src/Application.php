@@ -86,6 +86,10 @@ class Application {
         return $this->databaseDriver;
     }
 
+    public function getSession(): Session {
+        return $this->session;
+    }
+
     /**
      * Execute the application
      *
