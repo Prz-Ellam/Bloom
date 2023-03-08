@@ -32,6 +32,8 @@ interface DatabaseDriver {
     // Ejecuta un insert
     public function executeNonQuery(string $query, array $parameters): int;
 
+    public function executeOneReader(string $query, array $parameters): array;
+
     // Ejecuta un reader
     public function executeReader(string $query, array $parameters): array;
 
