@@ -59,6 +59,12 @@ class PDODatabaseDriver implements DatabaseDriver {
         //}
     }
 
+    public function executeOneReader(string $query, array $parameters): array {
+        $statement = $this->pdo->prepare($query);
+        $statement->execute($parameters);
+        return $statement->fetch(PDO::FETCH_ASSOC);
+    }
+
     public function executeReader(string $query, array $parameters): array {
         //try {
             $statement = $this->pdo->prepare($query);
