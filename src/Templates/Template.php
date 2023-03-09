@@ -2,6 +2,15 @@
 
 namespace Bloom\Templates;
 
+// Temporal Facades
+function env(string $key) {
+    return $_ENV[$key];
+}
+
+function session(string $key) {
+    return $_SESSION[$key];
+}
+
 class Template {
     /**
      * Template path to render
