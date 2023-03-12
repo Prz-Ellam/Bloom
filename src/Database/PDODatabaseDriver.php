@@ -45,18 +45,18 @@ class PDODatabaseDriver implements DatabaseDriver {
     }
 
     public function executeNonQuery(string $query, array $parameters): int {
-        //try {
+        try {
             $statement = $this->pdo->prepare($query);
             $statement->execute($parameters);
             $rowCount = $statement->rowCount();
             return $rowCount;
-        //}
-        //catch (PDOException $exception) {
-        //    if ($this->inTransaction()) {
-        //        $this->rollback();
-        //    }
-        //    die($exception->getMessage());
-        //}
+        }
+        catch (PDOException $exception) {
+            if ($this->inTransaction()) {
+                $this->rollback();
+            }
+            die($exception->getMessage());
+        }
     }
 
     public function executeOneReader(string $query, array $parameters): array {

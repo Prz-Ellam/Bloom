@@ -44,7 +44,7 @@ class Application {
 
         $this->session = new PhpNativeSession();
         $this->session->create();
-        $this->session->regenerate();
+        //$this->session->regenerate();
         $this->request = $requestDirector->getRequest();
         $this->request->setSession($this->session);
 
