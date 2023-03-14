@@ -86,7 +86,9 @@ class Router {
         $route = $this->resolveRoute($request);
 
         if (!$route) {
-            throw new HttpNotFoundException();
+            call_user_func($this->notFound, $request, $response);
+            exit;
+            //throw new HttpNotFoundException();
         }
 
         // Weird
