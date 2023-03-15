@@ -120,13 +120,13 @@ class Router {
             }
             return;
         }
-        $middleware = new $middlewares[0];
+        $middleware = new $middlewares[0][0];
         return $middleware->handle(
             $request, 
             $response, 
-            fn() => $this->runMiddlewares($request, $response, array_slice($middlewares, 1), 
-            $target
-        ));
+            fn() => $this->runMiddlewares($request, $response, array_slice($middlewares, 1), $target),
+            array_slice($middlewares[0], 1)
+        );
     }
 
     public function setNotFound(Closure|array $action) {

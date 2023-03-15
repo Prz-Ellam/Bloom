@@ -2,15 +2,6 @@
 
 namespace Bloom\Templates;
 
-// Temporal Facades
-function env(string $key) {
-    return $_ENV[$key];
-}
-
-function session(string $key) {
-    return $_SESSION[$key];
-}
-
 class Template {
     /**
      * Template path to render
@@ -76,6 +67,28 @@ class Template {
         include_once "$this->basePath/$this->layoutName.$this->extension";
         $this->layoutName = null;
         return ob_get_clean();
+    }
+
+    public function env(string $key) {
+        return $_ENV[$key];
+    }
+    
+    public function session(string $key) {
+        return $_SESSION[$key];
+    }
+
+    public function script(string $name) {
+        $content = file_get_contents($_SERVER["DOCUMENT_ROOT"] . "/dist/manifest.json");
+        $content = json_decode($content, true);
+        $file = $content[$name]["file"];
+        return '<script defer type="module" src="../dist/' . $file . '"></script>';
+    }
+
+    public function link(string $name) {
+        $content = file_get_contents($_SERVER["DOCUMENT_ROOT"] . "/dist/manifest.json");
+        $content = json_decode($content, true);
+        $file = $content[$name]["file"];
+        return '<link rel="stylesheet" href="../dist/' . $file . '">';
     }
 }
 

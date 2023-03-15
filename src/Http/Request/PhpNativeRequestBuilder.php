@@ -102,6 +102,7 @@ class PhpNativeRequestBuilder extends RequestBuilder {
             case $requestsTable["PATCH_JSON"]:
             case $requestsTable["DELETE_JSON"]: {
                 $body = json_decode($input, true);
+                $body = $this->util_array_trim($body, true);
                 return $body;
             }
             case $requestsTable["GET_MULTIPART"]:
@@ -222,5 +223,16 @@ class PhpNativeRequestBuilder extends RequestBuilder {
             }
         }
         return $outputFiles;
+    }
+
+    function util_array_trim(array &$array, $filter = false) {
+        array_walk_recursive($array, function (&$value) use ($filter) {
+            $value = trim($value);
+            if ($filter) {
+                $value = filter_var($value, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            }
+        });
+
+        return $array;
     }
 }
