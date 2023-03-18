@@ -70,11 +70,11 @@ class Template {
     }
 
     public function env(string $key) {
-        return $_ENV[$key];
+        return $_ENV[$key] ?? null;
     }
     
     public function session(string $key) {
-        return $_SESSION[$key];
+        return $_SESSION[$key] ?? null;
     }
 
     public function script(string $name) {
