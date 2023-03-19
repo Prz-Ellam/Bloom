@@ -227,12 +227,13 @@ class PhpNativeRequestBuilder extends RequestBuilder {
 
     function util_array_trim(array &$array, $filter = false) {
         array_walk_recursive($array, function (&$value) use ($filter) {
-            $value = trim($value);
             if ($filter) {
-                $value = filter_var($value, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+                $type = gettype($value);
+                $value = htmlspecialchars($value);
+                $value = trim($value);
+                settype($value, $type);
             }
         });
-
         return $array;
     }
 }
