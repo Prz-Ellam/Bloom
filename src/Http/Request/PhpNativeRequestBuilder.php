@@ -229,8 +229,10 @@ class PhpNativeRequestBuilder extends RequestBuilder {
         array_walk_recursive($array, function (&$value) use ($filter) {
             if ($filter) {
                 $type = gettype($value);
-                $value = htmlspecialchars($value);
-                $value = trim($value);
+                if (!is_null($value)) {
+                    $value = htmlspecialchars($value);
+                    $value = trim($value);
+                }
                 settype($value, $type);
             }
         });
