@@ -47,7 +47,10 @@ class PDODatabaseDriver implements DatabaseDriver {
     public function executeNonQuery(string $query, array $parameters): int {
         try {
             $statement = $this->pdo->prepare($query);
-            $statement->execute($parameters);
+            foreach ($parameters as $param => $value) {
+                $statement->bindParam($param, $value);
+            }
+            $statement->execute();
             $rowCount = $statement->rowCount();
             return $rowCount;
         }
