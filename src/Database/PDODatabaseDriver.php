@@ -44,11 +44,14 @@ class PDODatabaseDriver implements DatabaseDriver {
         return $this->pdo->inTransaction();
     }
 
-    public function executeNonQuery(string $query, array $parameters): int {
+    public function executeNonQuery(string $query, array $parameters, ?array $types = null): int {
         try {
             $statement = $this->pdo->prepare($query);
             foreach ($parameters as $param => $value) {
-                $statement->bindParam($param, $value);
+                if (isset($types[$param]))
+                    $statement->bindValue($param, $value, $types[$param]);
+                else
+                    $statement->bindValue($param, $value);
             }
             $statement->execute();
             $rowCount = $statement->rowCount();
@@ -58,28 +61,49 @@ class PDODatabaseDriver implements DatabaseDriver {
             if ($this->inTransaction()) {
                 $this->rollback();
             }
+            // TODO: Eliminar este die
             die($exception->getMessage());
         }
     }
 
-    public function executeOneReader(string $query, array $parameters): array {
-        $statement = $this->pdo->prepare($query);
-        $statement->execute($parameters);
-        $result = $statement->fetch(PDO::FETCH_ASSOC);
-        return ($result !== false) ? $result : [];
+    public function executeOneReader(string $query, array $parameters, ?array $types = null): array {
+        try {
+            $statement = $this->pdo->prepare($query);
+            foreach ($parameters as $param => $value) {
+                if (isset($types[$param]))
+                    $statement->bindValue($param, $value, $types[$param]);
+                else
+                    $statement->bindValue($param, $value);
+            }
+            $statement->execute();
+            $result = $statement->fetch(PDO::FETCH_ASSOC);
+            return ($result !== false) ? $result : [];
+        }
+        catch (PDOException $exception) {
+            if ($this->inTransaction()) {
+                $this->rollback();
+            }
+            die($exception->getMessage());
+        }
     }
 
-    public function executeReader(string $query, array $parameters): array {
-        //try {
+    public function executeReader(string $query, array $parameters, array $types = []): array {
+        try {
             $statement = $this->pdo->prepare($query);
-            $statement->execute($parameters);
-            return $statement->fetchAll(PDO::FETCH_ASSOC);
-        //} 
-        //catch (PDOException $ex) {
-        //    if ($this->inTransaction()) {
-        //        $this->rollback();
-        //    }
-        //    die($ex->getMessage());
-        //}
+            foreach ($parameters as $param => $value) {
+                if (isset($types[$param]))
+                    $statement->bindValue($param, $value, $types[$param]);
+                else
+                    $statement->bindValue($param, $value);
+            }
+            $statement->execute();
+            return $statement->fetchAll(PDO::FETCH_ASSOC) ?? [];
+        } 
+        catch (PDOException $ex) {
+            if ($this->inTransaction()) {
+                $this->rollback();
+            }
+            die($ex->getMessage());
+        }
     }
 }
