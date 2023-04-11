@@ -25,7 +25,7 @@ class DB {
         return Application::app()->getDatabaseDriver()->executeNonQuery($query, $parameters, $types);
     }
 
-    public static function executeOneReader(string $query, array $parameters, array $types = []): array {
+    public static function executeOneReader(string $query, array $parameters, array $types = []): ?array {
         return Application::app()->getDatabaseDriver()->executeOneReader($query, $parameters, $types);
     }
 

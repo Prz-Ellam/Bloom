@@ -66,7 +66,7 @@ class PDODatabaseDriver implements DatabaseDriver {
         }
     }
 
-    public function executeOneReader(string $query, array $parameters, ?array $types = null): array {
+    public function executeOneReader(string $query, array $parameters, ?array $types = null): ?array {
         try {
             $statement = $this->pdo->prepare($query);
             foreach ($parameters as $param => $value) {
@@ -77,7 +77,7 @@ class PDODatabaseDriver implements DatabaseDriver {
             }
             $statement->execute();
             $result = $statement->fetch(PDO::FETCH_ASSOC);
-            return ($result !== false) ? $result : [];
+            return ($result !== false) ? $result : null;
         }
         catch (PDOException $exception) {
             if ($this->inTransaction()) {
