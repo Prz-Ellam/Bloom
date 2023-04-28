@@ -4,6 +4,7 @@ namespace Bloom\Router;
 
 use Bloom\Http\Exceptions\HttpNotFoundException;
 use Bloom\Http\HttpMethod;
+use Bloom\Http\Middleware;
 use Bloom\Http\Request\Request;
 use Bloom\Http\Response\Response;
 use Closure;
@@ -120,13 +121,48 @@ class Router {
             }
             return;
         }
-        $middleware = new $middlewares[0][0];
-        return $middleware->handle(
-            $request, 
-            $response, 
-            fn() => $this->runMiddlewares($request, $response, array_slice($middlewares, 1), $target),
-            array_slice($middlewares[0], 1)
-        );
+
+        $instanceMiddleware = new $middlewares[0][0];
+        if ($instanceMiddleware instanceof Middleware) {
+            return $instanceMiddleware->handle(
+                $request, 
+                $response, 
+                fn() => $this->runMiddlewares($request, $response, array_slice($middlewares, 1), $target),
+                array_slice($middlewares[0], 1)
+            );
+        }
+        else {
+            $action = $middlewares[0][1];
+            $parameters = array_slice($middlewares[0], 2);
+            return call_user_func(
+                [ $instanceMiddleware, $action ],
+                $request,
+                $response,
+                fn() => $this->runMiddlewares($request, $response, array_slice($middlewares, 1), $target),
+                $parameters
+            );
+        }
+/*
+        if (gettype($middlewares[0][0]) == "string") {
+            $middleware = new $middlewares[0][0];
+            return $middleware->handle(
+                $request, 
+                $response, 
+                fn() => $this->runMiddlewares($request, $response, array_slice($middlewares, 1), $target),
+                array_slice($middlewares[0], 1)
+            );
+        }
+        else if (is_array($middlewares[0][0])) {
+            $middleware = $middlewares[0][0];
+            
+            $middleware[0] = new $middleware[0];
+            
+            call_user_func($middleware, $request, $response,
+                fn() => $this->runMiddlewares($request, $response, array_slice($middlewares, 1), $target),
+                array_slice($middlewares[0], 1)
+            );
+        }
+        */
     }
 
     public function setNotFound(Closure|array $action) {
