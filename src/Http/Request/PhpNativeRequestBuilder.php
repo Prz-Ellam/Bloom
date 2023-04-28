@@ -225,7 +225,10 @@ class PhpNativeRequestBuilder extends RequestBuilder {
         return $outputFiles;
     }
 
-    function util_array_trim(array &$array, $filter = false) {
+    function util_array_trim(?array &$array, $filter = false) {
+        if (is_null($array)) {
+            return [];
+        }
         array_walk_recursive($array, function (&$value) use ($filter) {
             if ($filter) {
                 $type = gettype($value);

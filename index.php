@@ -69,14 +69,14 @@ $app = Application::app(__DIR__);
 // $app->get('/', function($request, $response) { print("Hello Bloom"); });
 
 class Middleware1 implements Middleware {
-    public function handle(Request $request, Response $response, Closure $next) {
+    public function handle(Request $request, Response $response, Closure $next, array $p) {
         print("Hola 1");
         $next();
     }
 }
 
 class Middleware2 implements Middleware {
-    public function handle(Request $request, Response $response, Closure $next) {
+    public function handle(Request $request, Response $response, Closure $next, array $p) {
         print("Hola 2");
         $next();
     }

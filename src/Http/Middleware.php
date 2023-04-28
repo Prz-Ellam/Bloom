@@ -10,5 +10,5 @@ use Closure;
  * Basic interface for implementing a Middleware
  */
 interface Middleware {
-    public function handle(Request $request, Response $response, Closure $next);
+    public function handle(Request $request, Response $response, Closure $next, array $args);
 }
