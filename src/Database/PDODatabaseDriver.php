@@ -44,6 +44,23 @@ class PDODatabaseDriver implements DatabaseDriver {
         return $this->pdo->inTransaction();
     }
 
+    function getPdoType($variable): int {
+        $pdoTypes = [
+            "integer" => PDO::PARAM_INT,
+            "boolean" => PDO::PARAM_BOOL,
+            "string" => PDO::PARAM_STR,
+            "NULL" => PDO::PARAM_NULL,
+            "float" => PDO::PARAM_STR,
+            "array" => PDO::PARAM_STR,
+            "object" => PDO::PARAM_STR,
+            "resource" => PDO::PARAM_STR,
+        ];
+    
+        $phpType = gettype($variable);
+        return $pdoTypes[$phpType] ?? PDO::PARAM_STR;
+    }
+    
+
     public function executeNonQuery(string $query, array $parameters, ?array $types = null): int {
         try {
             $statement = $this->pdo->prepare($query);
@@ -51,7 +68,7 @@ class PDODatabaseDriver implements DatabaseDriver {
                 if (isset($types[$param]))
                     $statement->bindValue($param, $value, $types[$param]);
                 else
-                    $statement->bindValue($param, $value);
+                    $statement->bindValue($param, $value, $this->getPdoType($value));
             }
             $statement->execute();
             $rowCount = $statement->rowCount();
@@ -73,7 +90,7 @@ class PDODatabaseDriver implements DatabaseDriver {
                 if (isset($types[$param]))
                     $statement->bindValue($param, $value, $types[$param]);
                 else
-                    $statement->bindValue($param, $value);
+                    $statement->bindValue($param, $value, $this->getPdoType($value));
             }
             $statement->execute();
             $result = $statement->fetch(PDO::FETCH_ASSOC);
@@ -94,7 +111,7 @@ class PDODatabaseDriver implements DatabaseDriver {
                 if (isset($types[$param]))
                     $statement->bindValue($param, $value, $types[$param]);
                 else
-                    $statement->bindValue($param, $value);
+                    $statement->bindValue($param, $value, $this->getPdoType($value));
             }
             $statement->execute();
             return $statement->fetchAll(PDO::FETCH_ASSOC) ?? [];

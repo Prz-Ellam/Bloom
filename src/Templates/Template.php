@@ -47,7 +47,7 @@ class Template {
         // if (is_array($this->parameters[$name])) {
         //     return json_encode($this->parameters[$name]);
         // }
-        return $this->parameters[$name] ?? "NULL";
+        return $this->parameters[$name] ?? null;
     }
 
     public function render(string $templateName): string {
@@ -77,18 +77,25 @@ class Template {
         return $_SESSION[$key] ?? null;
     }
 
+    public function asset(string $name) {
+        $content = file_get_contents($_SERVER["DOCUMENT_ROOT"] . "/dist/manifest.json");
+        $content = json_decode($content, true);
+        $file = $content[$name]["file"];
+        return "/dist/$file";
+    }
+
     public function script(string $name) {
         $content = file_get_contents($_SERVER["DOCUMENT_ROOT"] . "/dist/manifest.json");
         $content = json_decode($content, true);
         $file = $content[$name]["file"];
-        return '<script defer type="module" src="../dist/' . $file . '"></script>';
+        return '<script defer type="module" src="/dist/' . $file . '"></script>';
     }
 
     public function link(string $name) {
         $content = file_get_contents($_SERVER["DOCUMENT_ROOT"] . "/dist/manifest.json");
         $content = json_decode($content, true);
         $file = $content[$name]["file"];
-        return '<link rel="stylesheet" href="../dist/' . $file . '">';
+        return '<link rel="stylesheet" href="/dist/' . $file . '">';
     }
 }
 

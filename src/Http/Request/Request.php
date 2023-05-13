@@ -152,6 +152,11 @@ class Request {
         return $this;
     }
 
+    public function setBodyParam(string $param, $value): self {
+        $this->body[$param] = $value;
+        return $this;
+    }
+
     public function getParams($name = null, $default = null): array|string|null {
         if (is_null($name)) {
             return $this->params;
